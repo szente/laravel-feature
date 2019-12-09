@@ -47,26 +47,20 @@ class ScanViewsForFeaturesCommand extends Command
         $features = $this->service->scan();
         $areEnabledByDefault = config('features.scanned_default_enabled');
 
-        $this->getOutput()->writeln('');
-
         if (count($features) === 0) {
-            $this->error('No features were found in the project views!');
-            $this->getOutput()->writeln('');
+            $this->warn('No features were found in the project views!');
             return;
         }
 
         $this->info(count($features) . ' features found in views:');
-        $this->getOutput()->writeln('');
 
         foreach ($features as $feature) {
             $this->getOutput()->writeln('- ' . $feature);
         }
 
-        $this->getOutput()->writeln('');
         $this->info('All the new features were added to the database with the '
             . ($areEnabledByDefault ? 'ENABLED' : 'disabled') .
             ' status by default. Nothing changed for the already present ones.');
 
-        $this->getOutput()->writeln('');
     }
 }

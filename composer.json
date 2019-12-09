@@ -19,6 +19,7 @@
         "illuminate/support": "~5.6|^6.0"
     },
     "require-dev": {
+        "jeroen-g/laravel-packager": "^2.3",
         "mockery/mockery": "^0.9.4",
         "orchestra/database": "^3.6",
         "orchestra/testbench": "~3.6",

@@ -42,9 +42,11 @@ class FeatureServiceProvider extends ServiceProvider
             return app()->make($config->get('features.repository'));
         });
 
-        $this->app->make(FeatureManager::class);
-        $this->app->make(FeaturesViewScanner::class);
+    }
 
+    public function provides()
+    {
+        return ['features'];
     }
 
     private function registerBladeDirectives()
