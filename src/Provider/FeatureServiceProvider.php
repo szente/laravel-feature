@@ -4,6 +4,7 @@ namespace LaravelFeature\Provider;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use LaravelFeature\Domain\FeatureManager;
 use LaravelFeature\Domain\Repository\FeatureRepositoryInterface;
 use LaravelFeature\Console\Command\ScanViewsForFeaturesCommand;
 use LaravelFeature\Service\FeaturesViewScanner;
@@ -37,11 +38,13 @@ class FeatureServiceProvider extends ServiceProvider
 
         $config = $this->app->make('config');
 
+        $this->app->bind(FeatureRepositoryInterface::class, function () use ($config) {
+            return app()->make($config->get('features.repository'));
+        });
+
+        $this->app->make(FeatureManager::class);
         $this->app->make(FeaturesViewScanner::class);
 
-        $this->app->bind(FeatureRepositoryInterface::class, function () use ($config) {
-            return app()->make($config->get('features.repository', \LaravelFeature\Repository\EloquentFeatureRepository::class));
-        });
     }
 
     private function registerBladeDirectives()
