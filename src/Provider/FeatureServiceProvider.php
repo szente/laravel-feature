@@ -40,7 +40,7 @@ class FeatureServiceProvider extends ServiceProvider
         $this->app->make(FeaturesViewScanner::class);
 
         $this->app->bind(FeatureRepositoryInterface::class, function () use ($config) {
-            return app()->make($config->get('features.repository'));
+            return app()->make($config->get('features.repository', \LaravelFeature\Repository\EloquentFeatureRepository::class));
         });
     }
 
