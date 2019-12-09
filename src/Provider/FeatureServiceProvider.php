@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use LaravelFeature\Domain\Repository\FeatureRepositoryInterface;
 use LaravelFeature\Console\Command\ScanViewsForFeaturesCommand;
+use LaravelFeature\Service\FeaturesViewScanner;
 
 class FeatureServiceProvider extends ServiceProvider
 {
@@ -35,6 +36,8 @@ class FeatureServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../Config/features.php', 'features');
 
         $config = $this->app->make('config');
+
+        $this->app->make(FeaturesViewScanner::class);
 
         $this->app->bind(FeatureRepositoryInterface::class, function () use ($config) {
             return app()->make($config->get('features.repository'));

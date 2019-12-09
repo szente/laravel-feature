@@ -30,11 +30,11 @@ class ScanViewsForFeaturesCommand extends Command
     /**
      * Create a new command instance.
      */
-    public function __construct()
+    public function __construct(FeaturesViewScanner $service)
     {
         parent::__construct();
 
-        $this->service = app()->make(FeaturesViewScanner::class);
+        $this->service = $service;
     }
 
     /**
