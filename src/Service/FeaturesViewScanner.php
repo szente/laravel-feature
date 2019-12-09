@@ -19,9 +19,9 @@ class FeaturesViewScanner
      * @param FeatureManager $featureManager
      * @param Repository $config
      */
-    public function __construct(FeatureManager $featureManager, Repository $config)
+    public function __construct(FeatureManager $manager, Repository $config)
     {
-        $this->featureManager = $featureManager;
+        $this->featureManager = $manager;
         $this->config = $config;
     }
 

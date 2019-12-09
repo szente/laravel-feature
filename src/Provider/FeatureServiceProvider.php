@@ -4,10 +4,9 @@ namespace LaravelFeature\Provider;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use LaravelFeature\Domain\FeatureManager;
 use LaravelFeature\Domain\Repository\FeatureRepositoryInterface;
 use LaravelFeature\Console\Command\ScanViewsForFeaturesCommand;
-use LaravelFeature\Service\FeaturesViewScanner;
+
 
 class FeatureServiceProvider extends ServiceProvider
 {
@@ -23,8 +22,8 @@ class FeatureServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../Config/features.php' => config_path('features.php'),
         ]);
+
         $this->registerBladeDirectives();
-        $this->registerConsoleCommand();
     }
 
     /**
@@ -36,17 +35,16 @@ class FeatureServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../Config/features.php', 'features');
 
-        $config = $this->app->make('config');
-
-        $this->app->bind(FeatureRepositoryInterface::class, function () use ($config) {
-            return app()->make($config->get('features.repository'));
+        $this->app->bind(FeatureRepositoryInterface::class, function ($app) {
+            return $app->make(config('features.repository'));
         });
 
-    }
-
-    public function provides()
-    {
-        return ['features'];
+        if ($this->app->runningInConsole()) {
+            $this->app->bind('command.feature:scan', ScanViewsForFeaturesCommand::class);
+            $this->commands([
+                ScanViewsForFeaturesCommand::class
+            ]);
+        }
     }
 
     private function registerBladeDirectives()
@@ -75,14 +73,5 @@ class FeatureServiceProvider extends ServiceProvider
         Blade::directive('endfeaturefor', function () {
             return '<?php endif; ?>';
         });
-    }
-
-    private function registerConsoleCommand()
-    {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                ScanViewsForFeaturesCommand::class
-            ]);
-        }
     }
 }
